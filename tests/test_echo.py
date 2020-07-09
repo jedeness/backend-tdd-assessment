@@ -7,7 +7,7 @@ Students are expected to edit this module, to add more tests to run
 against the 'echo.py' program.
 """
 
-__author__ = "???"
+__author__ = "Jed Enas, Daniel Lomelino, James Maupin"
 
 import sys
 import importlib
@@ -92,6 +92,13 @@ class TestEcho(unittest.TestCase):
     # Students: add more parser tests here
     #
 
+    def test_help(self):
+        args = ["-h"]
+        stdout, stderr = run_capture(self.module.__file__, args)
+        with open('USAGE') as f:
+            usage = f.read()
+        self.assertEqual('\n'.join(stdout) + '\n', usage)
+
     def test_echo(self):
         """Check if main() function prints anything at all"""
         stdout, stderr = run_capture(self.module.__file__)
@@ -117,6 +124,20 @@ class TestEcho(unittest.TestCase):
     #
     # Students: add more cmd line options tests here.
     #
+
+    def test_no_option(self):
+        args = ["hello world"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything."
+        self.assertEqual(output[0], "hello world")
+
+    def test_all_options(self):
+        args = ["-tul", "hElLo wOrLd"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything."
+        self.assertEqual(output[0], "Hello World")
 
 
 if __name__ == '__main__':
